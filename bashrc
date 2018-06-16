@@ -5,17 +5,9 @@ if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
-# Uncomment the following line if you don't like systemctl's auto-paging feature:
-# export SYSTEMD_PAGER=
-#powerline-daemon -q
-#POWERLINE_BASH_CONTINUATION=1
-#POWERLINE_BASH_SELECT=1
-#. /home/sram21/.local/lib/python2.7/site-packages/powerline/bindings/bash/powerline.sh
 HISTCONTROL=ignoreboth
 
 # User specific aliases and functions
-source /cust/tools/bin/b2c.sh
-export PS1=$'\[\e[34;1m\]\u@\h:[\D{%T}]:\w\[\e[1;32m\]$(parse_git_branch)$\[\e[92m\]\xe2\x86\x92\[\e[0m\] '
 export LD_LIBRARY_PATH=/usr/lib/oracle/12.1/client64/lib/
 export A_AUTH=			#akamai creds
 export SVN_AUTH=	#svn creds
@@ -23,7 +15,6 @@ export SSHPASS=`cat $HOME/.pw`
 export HTTP_AUTH=   	#rappctrl creds
 export ME=mail@example.com
 export PATH=$PATH:/opt/scripts_bin
-export DEF2KEYS_DATA_DIR=$HOME/envdef
 alias connect="ssh 2>/dev/null"
 alias sshpass="sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null 2>/dev/null"
 alias nokeyconnect="ssh -o 'PubKeyAuthentication no' 2>/dev/null"
@@ -40,10 +31,39 @@ alias tmc="clear && tmux clear-history"
 alias tmk="tmux kill-session"
 alias ls='ls --color=auto'
 alias pawx='psql -d awx -U awx -h tower.va2.b2c.blah.com'
+c_red=`tput setaf 1`
+c_green=`tput setaf 2`
 
-function parse_git_branch {
-   git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+parse_git_branch ()
+{
+  if git rev-parse --git-dir >/dev/null 2>&1
+  then
+    gitver=$(git branch 2>/dev/null| sed -n '/^\*/s/^\* //p')
+  else
+    return 0
+  fi
+  echo -e $gitver
 }
+
+branch_color ()
+{
+  if git rev-parse --git-dir >/dev/null 2>&1
+  then
+    color=""
+    #if git diff --quiet 2>/dev/null >&2 
+    if git status | grep "nothing to commit" >/dev/null 2>&1
+    then
+      color="${c_green}"
+    else
+      color=${c_red}
+    fi
+  else
+    return 0
+  fi
+  echo -ne $color
+}
+
+export PS1=$'\[\e[34;1m\]\u@\h:[\D{%T}]:\w\[\e[1;32m\][\[$(branch_color)\]$(parse_git_branch)] \[\e[92m\]\xe2\x86\x92\[\e[0m\] '
 
 plussql() {
 	if [[ $1 != "*prdv*" ]]

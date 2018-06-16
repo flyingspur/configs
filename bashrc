@@ -15,7 +15,7 @@ HISTCONTROL=ignoreboth
 
 # User specific aliases and functions
 source /cust/tools/bin/b2c.sh
-export PS1=$'\n\[\e[0;93m\]\u@nutanix\e[22m\] [\D{%T}]:\w\n\[\e[1;32m\]$(parse_git_branch)\[\e[92m\]\xe2\x86\x92\[\e[0m\] '
+export PS1=$'\[\e[34;1m\]\u@\h:[\D{%T}]:\w\[\e[1;32m\]$(parse_git_branch)$\[\e[92m\]\xe2\x86\x92\[\e[0m\] '
 export LD_LIBRARY_PATH=/usr/lib/oracle/12.1/client64/lib/
 export A_AUTH=			#akamai creds
 export SVN_AUTH=	#svn creds
@@ -41,8 +41,8 @@ alias tmk="tmux kill-session"
 alias ls='ls --color=auto'
 alias pawx='psql -d awx -U awx -h tower.va2.b2c.blah.com'
 
-parse_git_branch() {
- git branch 2> /dev/null | sed '/^[^*]/d;s/* \(.*\)/git:(branch:\1)/'
+function parse_git_branch {
+   git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
 }
 
 plussql() {

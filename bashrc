@@ -61,8 +61,7 @@ branch_color ()
   fi
   echo -ne $color
 }
-export PS1=$'\[\e[34;1m\]\u@\h\[\e[1;32m\][\D{%T}]\[\e[0m\]\w\[\e[1;32m\][\[$(branch_color)\]$(parse_git_branch)] \[\e[92m\]\xe2\x86\x92\[\e[0m\] '
-
+export PS1=$'\[\e[34;1m\]\u@\h\[\e[1;32m\][\D{%T}]\[\e[0m\]\w\[\e[1;32m\]\[$(branch_color)\]$(parse_git_branch) \[\e[92m\]\xe2\x86\x92\[\e[0m\] '
 plussql() {
 	if [[ $1 != "*prdv*" ]]
 	then

@@ -38,7 +38,7 @@ parse_git_branch ()
 {
   if git rev-parse --git-dir >/dev/null 2>&1
   then
-    gitver=$(git branch 2>/dev/null| sed -n '/^\*/s/^\* //p')
+    gitver=$(git branch 2>/dev/null| sed -n '/^\*/s/^\* \(.*\)/\(\1\)/p')
   else
     return 0
   fi

@@ -1,3 +1,4 @@
+syntax on
 set encoding=utf-8 fileencoding=utf-8 langmenu=en_US.UTF-8
 set cmdheight=2 scrolloff=8 signcolumn=yes
 set nohlsearch
@@ -22,6 +23,8 @@ set wildmenu wildmode=list:longest,full
 set laststatus=2 statusline=%F
 set cursorline
 set termguicolors
+set cc=80
+set fillchars=fold:\ ,vert:\ ,eob:\ ,msgsep:‾
 autocmd ColorScheme * hi ColorColumn ctermbg=0 guibg='#2a303b'
 syntax on
 
@@ -35,7 +38,6 @@ source ~/.config/nvim/ack.vim
 
 let mapleader = " "
 let g:coc_disable_transparent_cursor = 1
-let &colorcolumn="80,".join(range(120,999),",")
 let g:indentLine_color_gui='#424b59'
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 let g:netrw_banner = 0
@@ -44,10 +46,13 @@ let g:loaded_netrwPlugin = 1
 let g:lt_location_list_toggle_map = '<leader>l'
 let g:lt_quickfix_list_toggle_map = '<leader>q'
 let g:fzf_layout = { 'window': { 'width': 1, 'height': 0.9 } }
+let g:airline_theme='deus'
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+colorscheme deus
 
 inoremap jj <esc>
 nnoremap <leader>f :Files<CR>
-nnoremap <leader>g :Gfiles<CR>
+nnoremap <leader>g :GFiles<CR>
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>rg :Rg
 nnoremap <leader>e :CocCommand explorer<CR>
@@ -62,16 +67,3 @@ nnoremap tj :tabprev<CR>
 nnoremap th :tabfirst<CR>
 nnoremap tl :tablast<CR>
 
-colorscheme deus
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-
-fun! TrimWhitespace()
-  let l:save = winsaveview()
-  keeppatterns %s/\s\+$//e
-  call winrestview(l:save)
-endfun
-
-augroup nowhitespace
-  autocmd!
-  autocmd BufWritePre * :call TrimWhitespace()
-augroup END
